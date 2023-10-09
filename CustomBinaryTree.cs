@@ -103,6 +103,35 @@ namespace ConsoleApp2
             }
         }
 
+        public int GetHeight(CustomBinaryNode<T> node)
+        {
+            int height = 0;
+            return TraverseBinaryTree(node, height);
+        }
+
+        public int GetHeightOfTree()
+        {
+            int height = 0;
+            return TraverseBinaryTree(this.Root, height);
+        }
+
+        private int TraverseBinaryTree(CustomBinaryNode<T> node, int height)
+        {
+            if(node==null)
+                return height;
+
+            if (node != null)
+            {
+                height++;
+            }
+
+            int a = TraverseBinaryTree(node.Left, height);
+            int b = TraverseBinaryTree(node.Right, height);
+
+            int c = Math.Max(height, Math.Max(a, b));
+            return c;
+        }
+
         public void TraverseInOrder(CustomBinaryNode<T> node, List<T> list)
         {
             if (node == null)
