@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp2
 {
-    public class CustomBinaryTree<T> where T:IComparable<T>,new()
+    public class CustomBinaryTree<T> : IDisposable where T:IComparable<T>, new()
     {
         public CustomBinaryNode<T> Root { get; set; }
 
@@ -18,6 +18,118 @@ namespace ConsoleApp2
         public CustomBinaryNode<T> InsertValue(T value)
         {            
             return TraversalInsert(value);
+        }
+
+        public void DeleteValue(T value)
+        {
+            DeleteRecursive(this.Root, value);
+        }
+
+        public bool IsTreeBalanced()
+        {
+            return IsNodeBalanced(this.Root);
+        }
+
+        public void ConvertToBalancedTree()
+        {
+            List<T> result = new List<T>();
+            TraverseInOrder(this.Root, result);
+
+            if (result != null)
+            {
+                this.Root = Clear(Root);
+                this.Root = BuildTree(result, 0, result.Count - 1);
+            }
+        }
+
+        private CustomBinaryNode<T> BuildTree(List<T> nodes, int start, int end)
+        {
+            if (start > end)
+                return null;
+
+            int mid = Math.Abs((start + end) / 2);
+
+            CustomBinaryNode<T> node = new CustomBinaryNode<T>(nodes[mid]);
+
+            node.Left = BuildTree(nodes, start, mid - 1);
+            node.Right = BuildTree(nodes, mid+1, end);
+
+            return node;
+        }
+
+        public bool IsNodeBalanced(CustomBinaryNode<T> node)
+        {
+            int lh = 0;
+            int rh = 0;
+
+            if (node != null)
+            {
+                lh = GetHeight(node.Left);
+                rh = GetHeight(node.Right);
+
+                if (Math.Abs(lh - rh) <= 1 && IsNodeBalanced(node.Left) && IsNodeBalanced(node.Right))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private CustomBinaryNode<T> DeleteRecursive(CustomBinaryNode<T> node, T value)
+        {
+            if (node == null)
+                return node;
+
+            if(value.CompareTo(node.Value) == -1)
+            {
+                node.Left = DeleteRecursive(node.Left, value);
+            } 
+            else if(value.CompareTo(node.Value) == 1)
+            {
+                node.Right = DeleteRecursive(node.Right, value);
+            }
+            else
+            {
+                // value matches with node
+                if (node.Left == null && node.Right == null)
+                {
+                    node = null;
+                }
+                else if (node.Left == null)
+                {
+                    node = node.Right;
+                }
+                else if (node.Right == null)
+                {
+                    node = node.Left;
+                }
+                else
+                {
+                    T minValue = GetMinValue(node.Right);
+                    node.Value = minValue;
+                    node.Right = DeleteRecursive(node.Right, node.Value);
+                }
+            }
+
+            return node;
+        }
+
+        private T GetMinValue(CustomBinaryNode<T> node)
+        {
+            T value = node.Value;
+
+            while (node.Left != null)
+            {
+                value = node.Left.Value;
+                node = node.Left;
+            }
+
+            return value;
         }
 
         private CustomBinaryNode<T> TraversalInsert(T value)
@@ -160,6 +272,23 @@ namespace ConsoleApp2
             {
                 return null;
             }
+        }
+
+        public void Dispose()
+        {
+           this.Root = Clear(this.Root);
+        }
+
+        private CustomBinaryNode<T> Clear(CustomBinaryNode<T> node)
+        {
+            if (node == null)
+                return null;
+
+            node.Left = Clear(node.Left);
+            node.Right = Clear(node.Right);
+
+            node = null;
+            return node;
         }
     }
 
