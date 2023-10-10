@@ -6,16 +6,16 @@ using System.Threading.Tasks;
 
 namespace ConsoleApp2
 {
-    public class CustomBinaryTree<T> : IDisposable where T:IComparable<T>, new()
+    public class BinaryTree<T> : IDisposable where T:IComparable<T>, new()
     {
-        public CustomBinaryNode<T> Root { get; set; }
+        public BinaryNode<T> Root { get; set; }
 
-        public CustomBinaryTree()
+        public BinaryTree()
         {
 
         }
 
-        public CustomBinaryNode<T> InsertValue(T value)
+        public BinaryNode<T> InsertValue(T value)
         {            
             return TraversalInsert(value);
         }
@@ -42,14 +42,14 @@ namespace ConsoleApp2
             }
         }
 
-        private CustomBinaryNode<T> BuildTree(List<T> nodes, int start, int end)
+        private BinaryNode<T> BuildTree(List<T> nodes, int start, int end)
         {
             if (start > end)
                 return null;
 
             int mid = Math.Abs((start + end) / 2);
 
-            CustomBinaryNode<T> node = new CustomBinaryNode<T>(nodes[mid]);
+            BinaryNode<T> node = new BinaryNode<T>(nodes[mid]);
 
             node.Left = BuildTree(nodes, start, mid - 1);
             node.Right = BuildTree(nodes, mid+1, end);
@@ -57,7 +57,7 @@ namespace ConsoleApp2
             return node;
         }
 
-        public bool IsNodeBalanced(CustomBinaryNode<T> node)
+        public bool IsNodeBalanced(BinaryNode<T> node)
         {
             int lh = 0;
             int rh = 0;
@@ -80,7 +80,7 @@ namespace ConsoleApp2
             return false;
         }
 
-        private CustomBinaryNode<T> DeleteRecursive(CustomBinaryNode<T> node, T value)
+        private BinaryNode<T> DeleteRecursive(BinaryNode<T> node, T value)
         {
             if (node == null)
                 return node;
@@ -119,7 +119,7 @@ namespace ConsoleApp2
             return node;
         }
 
-        private T GetMinValue(CustomBinaryNode<T> node)
+        private T GetMinValue(BinaryNode<T> node)
         {
             T value = node.Value;
 
@@ -132,11 +132,11 @@ namespace ConsoleApp2
             return value;
         }
 
-        private CustomBinaryNode<T> TraversalInsert(T value)
+        private BinaryNode<T> TraversalInsert(T value)
         {
             if (Root == null)
             {
-                Root = new CustomBinaryNode<T>(value);                
+                Root = new BinaryNode<T>(value);                
                 return Root;
             }
 
@@ -145,11 +145,11 @@ namespace ConsoleApp2
             return Root;
         }
 
-        private CustomBinaryNode<T> InsertRecursive(CustomBinaryNode<T> current, T data)
+        private BinaryNode<T> InsertRecursive(BinaryNode<T> current, T data)
         {
             if (current == null)
             {
-                return new CustomBinaryNode<T>(data);
+                return new BinaryNode<T>(data);
             }
 
             if (data.CompareTo(current.Value) == -1)
@@ -164,7 +164,7 @@ namespace ConsoleApp2
             return current;
         }
 
-        public CustomBinaryNode<T> SearchNode(T value)
+        public BinaryNode<T> SearchNode(T value)
         {
             return TraverseNode(Root, value);
         }
@@ -190,7 +190,7 @@ namespace ConsoleApp2
             Traversal(Root, BinaryTreeTraversal.PostOrder);
         }
 
-        private void Traversal(CustomBinaryNode<T> node, BinaryTreeTraversal traversal)
+        private void Traversal(BinaryNode<T> node, BinaryTreeTraversal traversal)
         {
             if (node == null)
                 return;
@@ -215,7 +215,7 @@ namespace ConsoleApp2
             }
         }
 
-        public int GetHeight(CustomBinaryNode<T> node)
+        public int GetHeight(BinaryNode<T> node)
         {
             int height = 0;
             return TraverseBinaryTree(node, height);
@@ -227,7 +227,7 @@ namespace ConsoleApp2
             return TraverseBinaryTree(this.Root, height);
         }
 
-        private int TraverseBinaryTree(CustomBinaryNode<T> node, int height)
+        private int TraverseBinaryTree(BinaryNode<T> node, int height)
         {
             if(node==null)
                 return height;
@@ -244,7 +244,43 @@ namespace ConsoleApp2
             return c;
         }
 
-        public void TraverseInOrder(CustomBinaryNode<T> node, List<T> list)
+        public int GetHeightOfNode(T val)
+        {
+            return GetHeightOfNode(this.Root, 0, val);
+        }
+
+        public int GetHeightOfNode(BinaryNode<T> node)
+        {
+            return GetHeightOfNode(this.Root, 0, node.Value);
+        }
+
+        private int GetHeightOfNode(BinaryNode<T> node, int height, T val)
+        {
+            if (node == null)
+            {
+                return -1;
+            }
+            
+            height++;
+
+            if(node.Value.CompareTo(val)==0)
+            {
+                return height;
+            }
+
+            int a = GetHeightOfNode(node.Left, height, val);
+            int b = GetHeightOfNode(node.Right, height, val);
+
+            if (a != -1)
+                return a;
+
+            if (b != -1)
+                return b;
+
+            return -1;
+        }
+
+        public void TraverseInOrder(BinaryNode<T> node, List<T> list)
         {
             if (node == null)
                 return;
@@ -254,7 +290,7 @@ namespace ConsoleApp2
             TraverseInOrder(node.Right, list);
         }
 
-        private CustomBinaryNode<T> TraverseNode(CustomBinaryNode<T> node, T value)
+        private BinaryNode<T> TraverseNode(BinaryNode<T> node, T value)
         {
             if (node.Value.CompareTo(value) == 0)
             {
@@ -279,7 +315,7 @@ namespace ConsoleApp2
            this.Root = Clear(this.Root);
         }
 
-        private CustomBinaryNode<T> Clear(CustomBinaryNode<T> node)
+        private BinaryNode<T> Clear(BinaryNode<T> node)
         {
             if (node == null)
                 return null;
