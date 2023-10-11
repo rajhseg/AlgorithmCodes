@@ -22,7 +22,7 @@ namespace ConsoleApp2
 
         public void DeleteValue(T value)
         {
-            DeleteRecursive(this.Root, value);
+            this.Root = DeleteRecursive(this.Root, value);
         }
 
         public bool IsTreeBalanced()
