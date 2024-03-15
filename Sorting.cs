@@ -106,49 +106,7 @@ namespace ConsoleApp2
             }
 
             return k;
-        }
-
-        public static void QuickSort(int[] arr, int low, int high)
-        {
-            //if (high <= 0 || low >= arr.Length || low > high || low ==high)
-            //    return;
-
-            if (low < high)
-            {
-                int pivot = GetPivot(arr, low, high);
-                QuickSort(arr, low, pivot - 1);
-                QuickSort(arr, pivot + 1, high);
-            }
-        }
-
-        private static int GetPivot(int[] arr, int low, int high)
-        {
-            int k = low - 1;
-            int i = low;
-
-            while (i <= high)
-            {
-                if (i == high)
-                {
-                    k++;
-                    Swap(ref arr, high, k);
-                }
-
-                if (arr[i] < arr[high])
-                {                   
-                    k++;
-                    if (arr[k]> arr[i])
-                    {
-                        Swap(ref arr, k, i);
-                    }
-                }                
-               
-                i++;
-                
-            }
-
-            return k;
-        }
+        }        
 
         public static void Swap(ref int[] arr, int i, int j)
         {
